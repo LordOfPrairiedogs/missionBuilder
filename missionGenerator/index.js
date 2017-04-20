@@ -8,6 +8,7 @@ function MissionGenerator() {
     mgData = this;
     mgData.regexBracket = /(\[[\w|_|\.]+\])/;
     mgData.masterDictionary = {};
+    mgData.usage = {};
 }
 
 module.exports = MissionGenerator;
@@ -34,35 +35,42 @@ MissionGenerator.prototype.loadDictionary = function(filename){
 
 MissionGenerator.prototype.resolveGroup = function(m){
     var groupNameBracket, phrase;
-    if (typeof m === 'string'){
-            groupNameBracket = m.toUpperCase();
+    groupNameBracket = m.toUpperCase();
+    var groupNameTop = groupNameBracket.replace('[', '').replace(']', '');
+    var groupNames = groupNameTop.split('|');
+    var groupwd = mgData.buildWeightedDictionary(groupNames);
+    var groupName = mgData.weighted_choice(groupwd);
+    var returnVal = "";
+    if (groupName.startsWith('DICE.')) {
+        var dice = groupName.slice(5).split('D');
+        var sum = 0;
+        for (var i = 0; i < dice[0]; i++) {
+            sum += Math.floor((Math.random() * dice[1]) + 1);
+        }
+        phrase = sum.toString();
+    }else if (groupName.startsWith('%') && mgData.usage[m]){
+        returnVal = mgData.usage[m];
+    }else{
+        var groupList = mgData.masterDictionary[groupName];
+        console.log('groupname: ' + groupName);
+        if (!groupList){
+            returnVal = '+++'+groupName+'+++';
         } else {
-            groupNameBracket = m.toUpperCase();
+            var wd = mgData.buildWeightedDictionary(groupList);
+            phrase = mgData.weighted_choice(wd);
         }
-        var groupName = groupNameBracket.replace('[', '').replace(']', '');
-        if (groupName.startsWith('DICE.')){
-            var dice = groupName.slice(5).split('D');
-            var sum = 0;
-            for (var i = 0; i < dice[0]; i++){
-                sum += Math.floor((Math.random() * dice[1]) + 1);
-            }
-            phrase = sum.toString();
-        }else{
-            var groupList = mgData.masterDictionary[groupName];
-            console.log('groupname: ' + groupName);
-            if (!groupList){
-                return '+++'+groupName+'+++';
-            } else {
-                var wd = mgData.buildWeightedDictionary(groupList);
-                phrase = mgData.weighted_choice(wd);
-            }
-        }
-        if (mgData.regexBracket.test(phrase)){
-            return mgData.run(phrase);
-        } else {
-            return phrase;
-        }
-    };
+    }
+
+    if (mgData.regexBracket.test(phrase)){
+        returnVal = mgData.run(phrase);
+    } else {
+        returnVal = phrase;
+    }
+    if (!mgData.usage[m]) {
+        mgData.usage[m] = returnVal;
+    }
+    return returnVal;
+};
 
 MissionGenerator.prototype.buildWeightedDictionary = function(list){
     var regexGators = /\<(.*)\>/;
@@ -97,6 +105,19 @@ MissionGenerator.prototype.weighted_choice = function (choices) {
         if (r  <= upto){
             return choices[i].key;
         }
+    }
+}
+
+MissionGenerator.prototype.addToGroup = function (groupName, phrases){
+    groupName = groupName.toUpperCase();
+    var groupList = mgData.masterDictionary[groupName];
+    if (!Array.isArray(phrases)){
+        phrases = [phrases];
+    }
+    if (groupList){
+        mgData.masterDictionary[groupName]=groupList.concat(phrases);
+    }else{
+        mgData.masterDictionary[groupName] = phrases;
     }
 }
 
