@@ -8,6 +8,7 @@ function MissionGenerator() {
     mgData = this;
     mgData.regexBracket = /(\[[\w|_|\.]+\])/;
     mgData.masterDictionary = {};
+    mgData.usage = {};
 }
 
 module.exports = MissionGenerator;
@@ -39,29 +40,36 @@ MissionGenerator.prototype.resolveGroup = function(m){
     var groupNames = groupNameTop.split('|');
     var groupwd = mgData.buildWeightedDictionary(groupNames);
     var groupName = mgData.weighted_choice(groupwd);
-
-    if (groupName.startsWith('DICE.')){
+    var returnVal = "";
+    if (groupName.startsWith('DICE.')) {
         var dice = groupName.slice(5).split('D');
         var sum = 0;
-        for (var i = 0; i < dice[0]; i++){
+        for (var i = 0; i < dice[0]; i++) {
             sum += Math.floor((Math.random() * dice[1]) + 1);
         }
         phrase = sum.toString();
+    }else if (groupName.startsWith('%') && mgData.usage[m]){
+        returnVal = mgData.usage[m];
     }else{
         var groupList = mgData.masterDictionary[groupName];
         console.log('groupname: ' + groupName);
         if (!groupList){
-            return '+++'+groupName+'+++';
+            returnVal = '+++'+groupName+'+++';
         } else {
             var wd = mgData.buildWeightedDictionary(groupList);
             phrase = mgData.weighted_choice(wd);
         }
     }
+
     if (mgData.regexBracket.test(phrase)){
-        return mgData.run(phrase);
+        returnVal = mgData.run(phrase);
     } else {
-        return phrase;
+        returnVal = phrase;
     }
+    if (!mgData.usage[m]) {
+        mgData.usage[m] = returnVal;
+    }
+    return returnVal;
 };
 
 MissionGenerator.prototype.buildWeightedDictionary = function(list){
