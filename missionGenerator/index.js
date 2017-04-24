@@ -6,7 +6,7 @@ var mgData;
 
 function MissionGenerator() {
     mgData = this;
-    mgData.regexBracket = /(\[[\w|_|\.]+\])/;
+    mgData.regexBracket = /(\[[\w|_|\.\%\<\>]+\])/;
     mgData.masterDictionary = {};
     mgData.usage = {};
 }
@@ -41,6 +41,7 @@ MissionGenerator.prototype.resolveGroup = function(m){
     var groupwd = mgData.buildWeightedDictionary(groupNames);
     var groupName = mgData.weighted_choice(groupwd);
     var returnVal = "";
+
     if (groupName.startsWith('DICE.')) {
         var dice = groupName.slice(5).split('D');
         var sum = 0;
@@ -48,8 +49,16 @@ MissionGenerator.prototype.resolveGroup = function(m){
             sum += Math.floor((Math.random() * dice[1]) + 1);
         }
         phrase = sum.toString();
-    }else if (groupName.startsWith('%') && mgData.usage[m]){
-        returnVal = mgData.usage[m];
+    }else if (groupName.startsWith('%')){
+        groupName = groupName.replace('%','');
+
+        if(mgData.usage[groupName]){
+            phrase = mgData.usage[groupName];
+            console.log("%"+groupName);
+        } else {
+            phrase = mgData.run(m.replace('%',''));
+            mgData.usage[groupName] = phrase;
+        }
     }else{
         var groupList = mgData.masterDictionary[groupName];
         console.log('groupname: ' + groupName);
@@ -65,9 +74,6 @@ MissionGenerator.prototype.resolveGroup = function(m){
         returnVal = mgData.run(phrase);
     } else {
         returnVal = phrase;
-    }
-    if (!mgData.usage[m]) {
-        mgData.usage[m] = returnVal;
     }
     return returnVal;
 };
