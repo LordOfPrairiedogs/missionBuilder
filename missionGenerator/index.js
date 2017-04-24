@@ -6,7 +6,7 @@ var mgData;
 
 function MissionGenerator() {
     mgData = this;
-    mgData.regexBracket = /(\[[\w|_|\.\%\<\>]+\])/;
+    mgData.regexBracket = /(\[[\w|_|\s\.\%\<\>]+\])/;
     mgData.masterDictionary = {};
     mgData.usage = {};
 }
@@ -23,23 +23,22 @@ MissionGenerator.prototype.saveDictionary = function(filename){
     });
 };
 MissionGenerator.prototype.loadDictionary = function(filename){
-    console.log(filename);
     fs.readFile(filename, 'utf8', function (err,data) {
         if (err) {
             return console.log(err);
         }
-        console.log(JSON.parse(data));
         mgData.masterDictionary=JSON.parse(data);
     });
 };
 
 MissionGenerator.prototype.resolveGroup = function(m){
     var groupNameBracket, phrase;
-    groupNameBracket = m.toUpperCase();
-    var groupNameTop = groupNameBracket.replace('[', '').replace(']', '');
+
+    var groupNameTop = m.replace('[', '').replace(']', '');
     var groupNames = groupNameTop.split('|');
     var groupwd = mgData.buildWeightedDictionary(groupNames);
-    var groupName = mgData.weighted_choice(groupwd);
+    var groupNameIn = mgData.weighted_choice(groupwd);
+    var groupName = groupNameIn.toUpperCase();
     var returnVal = "";
 
     if (groupName.startsWith('DICE.')) {
@@ -54,16 +53,14 @@ MissionGenerator.prototype.resolveGroup = function(m){
 
         if(mgData.usage[groupName]){
             phrase = mgData.usage[groupName];
-            console.log("%"+groupName);
         } else {
             phrase = mgData.run(m.replace('%',''));
             mgData.usage[groupName] = phrase;
         }
     }else{
         var groupList = mgData.masterDictionary[groupName];
-        console.log('groupname: ' + groupName);
         if (!groupList){
-            returnVal = '+++'+groupName+'+++';
+            phrase = groupNameIn;
         } else {
             var wd = mgData.buildWeightedDictionary(groupList);
             phrase = mgData.weighted_choice(wd);
@@ -125,6 +122,10 @@ MissionGenerator.prototype.addToGroup = function (groupName, phrases){
     }else{
         mgData.masterDictionary[groupName] = phrases;
     }
+}
+
+MissionGenerator.prototype.resetUsage = function (phrase){
+        delete mgData.usage[phrase];
 }
 
 MissionGenerator.prototype.run = function (phrase){

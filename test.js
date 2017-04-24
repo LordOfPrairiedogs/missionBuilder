@@ -3,10 +3,5 @@
  */
 MG = require('C:/projects/missionBuilder/missionGenerator');
 mgData = new MG();
-groupName = 'test'.toUpperCase();
-mgData.addToGroup(groupName, ['test1', 'test2', 'test3','test4', 'test5', 'test6']);
-mgData.run('Result: [Test] [%test] [%test]');
-mgData.usage;
-mgData.masterDictionary
-
-groupList = mgData.masterDictionary[groupName];
+mgData.loadDictionary("majestic12.json");
+mgData.run ('[WEIRD_SCIENCE_ACT]');

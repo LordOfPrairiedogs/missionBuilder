@@ -1,0 +1,258 @@
+{
+  "MISSION": [
+    "[TERRORIST_MISSION]",
+    "[WEIRD_SCIENCE_MISSION]"
+  ],
+  "WHEN": [
+    "<4>This morning at 0[Dice.2D5]00 hours",
+    "<1>A few minutes ago",
+    "<1>Last week",
+    "<1>Late last night",
+    "<1>[Dice.2D3] days ago",
+    "<1>Recently"
+  ],
+
+  "TERRORIST_MISSION" : [
+    "<1>[when], [bad_guys] [did_evil_act] [support_chance] '''OPERATION''' [Operational Code Names.main]: [ops_goal]. [allied_support] [parting_banter_chance]",
+    "<1>[when], [bad_guys] [did_evil_act] [support_chance] [ops_goal]. [allied_support] [parting_banter_chance]"
+  ],
+
+  "WEIRD_SCIENCE_MISSION" : [
+    "<1>[when], a [DANGEROUS_THING] was reported by a local [news source|blogger|enthusiest]. We need to get this under control [MILD_MISSION_CONSEQUENCE].",
+    "<1>[COMPETING_ORGANIZATION] recently [WEIRD_SCIENCE_ACT]. [NON_HOSTILE_ACTION] must be accomplished [MILD_MISSION_CONSEQUENCE]."
+  ],
+
+  "DANGEROUS_THING" : [
+    "undocumented cryptid, possibly a [%CRYPTID] or [%CRYPTID]-like creature,",
+    "suspicious apparation, possibly a [GHOST_TYPE],",
+    "undocumented crash site",
+    "pre-Cold War technology cache",
+    ""
+  ],
+
+  "CRYPTID" : [
+    "Lake monster",
+    "Wild-man",
+    "lycanthrope",
+    "giant/ogre",
+    "vampire/ghoul",
+    "[AFRICAN_CRYPTID]",
+    "[ASIAN_CRYPTID]",
+    "[AUSTRALIAN_CRYPTID]",
+    "[EUROPEAN_CRYPTID]",
+    "[OCEANIC_CRYPTID]",
+    "[NORTH_AMERICAN_CRYPTID]",
+    "[SOUTH_AMERICAN_CRYPTID]"
+
+  ],
+  "ASAIN_CRYPTID" : [
+    "Chickcharney (luck bird)",
+    "Alma/Yeren (wild man)",
+    "Cherufe (chimera or unicorn)"
+  ],
+
+  "AFRICAN_CRYPTID" : [
+    "Inkanyamba (lake monster)",
+    "Sirrush",
+    "Ngoubou (dinosaur)",
+    "Olitiau (giant bat/reptile)",
+    "Jba Fofi (giant spider)"
+  ],
+
+  "AUSTRALIAN_CRYPTID" : [
+    "Bunyip",
+    "Yowie"
+  ],
+
+  "EUROPEAN_CRYPTID" : [
+    "Black Shuck (large intelligent dog)",
+    "Beast of Bodmin (phantom cat)"
+  ],
+
+  "NORTH_AMERICAN_CRYPTID" : [
+    "Melon Head/The Faceless People/Frog People",
+    "Tsul 'Kalu (Cherokee sloping giant)",
+    "Ozark Howler",
+    "Fouke Monster/Sasquatch/Bigfoot/Old Yellow Top"
+
+  ],
+
+  "OCEANIC_CRYPTID" : [
+    "Mer-folk",
+    "Globster"
+  ],
+
+  "SOUTH_AMERICAN_CRYPTID" : [
+    "Mapinguari",
+    "Sucuriju Gigante",
+    "Ya-te-veo (man-eating tree)",
+    "Cherufe (magama monster)"
+  ],
+
+  "GHOST_TYPE" : [
+    "[black dog|Barghest|spectral hound]",
+    "poltergeist",
+    "haunt"
+  ],
+
+  "WEIRD_SCIENCE_ACT" : [
+    "[developed|created|tested] a [SCIENCE_ITEM_TYPE] to support their [%WEIRD_SCIENCE_PREFIX][%WEIRD_SCIENCE_SUFFIX] effort"
+  ],
+  "SCIENCE_ITEM_TYPE" : [
+    "prototype",
+    "working-model",
+    "functional design",
+    "pre-alpha release",
+    "device",
+    "production plan"
+  ],
+
+  "MAJESTIC_CHARACTER":[
+    "{MAJESTIC_DIVISION]"
+  ],
+
+  "MAJESTIC_DIVISION" : [
+    "A.G.E.N.T"
+  ],
+
+  "WEIRD_SCIENCE_NAME" : [
+    "[ACADEMIC_BRANCH] [WEIRD_SCIENCE_PREFIX][WEIRD_SCIENCE_SUFFIX]"
+  ],
+
+  "WEIRD_SCIENCE_PREFIX" : [
+    "agro",
+    "astro",
+    "atomic",
+    "bio",
+    "chemo",
+    "chiro",
+    "climato",
+    "crypto",
+    "cyto",
+    "eco",
+    "electro",
+    "endo",
+    "epidemo",
+    "ethno",
+    "etho",
+    "exo",
+    "geronto",
+    "geo",
+    "immuno",
+    "inorganic",
+    "magneto",
+    "meta",
+    "micro",
+    "morpho",
+    "nano",
+    "neuro",
+    "onto",
+    "organic",
+    "paleo",
+    "para",
+    "parasito",
+    "phyco",
+    "poly",
+    "psycho",
+    "radio",
+    "socio",
+    "spectro",
+    "stellar",
+    "stereo",
+    "sub",
+    "supra",
+    "thermo",
+    "toxi",
+    "ultra",
+    "vulcano"
+  ],
+  "WEIRD_SCIENCE_SUFFIX" : [
+    "anatomy",
+    "chemestry",
+    "dynamics",
+    "finance",
+    "genics",
+    "gistics",
+    "graphy",
+    "history",
+    "informatics",
+    "logistics",
+    "logy",
+    "mathematics",
+    "matics",
+    "mechanics",
+    "metrics",
+    "physics",
+    "projection",
+    "scopy",
+    "skeletal"
+
+  ],
+  "ACADEMIC_BRANCH" : [
+    "Aerospace",
+    "Agricultural",
+    "Biomedical",
+    "Cellular",
+    "Civil",
+    "Computational",
+    "Dynamic",
+    "Environmental",
+    "Evolutionary",
+    "Experimental",
+    "Fringe",
+    "Genetic",
+    "Institutional",
+    "Material",
+    "Molecular",
+    "Nuclear",
+    "Quantum",
+    "Statistical",
+    "Structural",
+    "Super",
+    "Theoretical",
+    "Temporal",
+    "Veteranary"
+  ],
+
+  "AREA_OF_STUDY" : [
+    "[EDUCATOR_LEVEL] of [ACADEMIC_BRANCH] [ACEDEMIC_ROLE].",
+    "[EDUCATOR_LEVEL] of [WEIRD_SCIENCE_PREFIX][WEIRD_SCIENCE_SUFFIX] [ACEDEMIC_ROLE].",
+    "[WEIRD_SCIENCE_PREFIX][WEIRD_SCIENCE_SUFFIX] [ACEDEMIC_ROLE] [EDUCATOR_LEVEL]."
+  ],
+  "ACEDEMIC_ROLE" : [
+    "Arts",
+    "Communications",
+    "Computing",
+    "Engineering",
+    "Instruction",
+    "Science",
+    "Studies"
+  ],
+  "EDUCATOR_LEVEL" : [
+   "Expert",
+   "Instructor",
+   "Master",
+   "Professor",
+   "Senior Professor",
+   "Teacher"
+
+ ],
+  "MILD_MISSION_CONSEQUENCE" : [
+    "before this thing goes [public|critical|viral]",
+    "before we lose the ability for containment",
+    "before they figure out a way to weaponize it",
+    "before [some orgainization|[COMPETING_ORGANIZATION]|[TERRORIST_ORGANIZATION]] gets involved",
+    "or we will be putting out [%WEIRD_SCIENCE_PREFIX][%WEIRD_SCIENCE_SUFFIX] fires until judgement day"
+  ],
+  "COMPETING_ORGANIZATION" : [
+    "NSA",
+    "Tesladyne",
+    "Delphi"
+  ],
+  "NON_HOSTILE_ACTION" : [
+    "destroy any and all data",
+    "plant false information to discredit their research",
+    "retrieve a copy of this data so our people can come up with a plan",
+    ""
+  ]
+}
