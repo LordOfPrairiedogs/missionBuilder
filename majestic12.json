@@ -1,7 +1,28 @@
 {
-  "MISSION": [
-    "[TERRORIST_MISSION]",
-    "[WEIRD_SCIENCE_MISSION]"
+  "ANTAGONIST_TYPE": [
+    "TERRORIST",
+    "WEIRD_SCIENCE",
+    "PARANORMAL"
+  ],
+  "THREAT_LEVEL": [
+    "MILD",
+    "MEDIUM",
+    "HIGH",
+    "CRITICAL"
+  ],
+  "MISSION_TYPE":[
+    "RESCUE",
+    "INFILTRATE",
+    "INVESTIGATE",
+    "NEUTRALIZE",
+    "COVERT",
+    "RECON"
+  ],
+  "MISSION_PARAMETERS":[
+    "Antagonist: [%ANTAGONIST_TYPE], Threat: [%THREAT_LEVEL], Mission: [%MISSION_TYPE]"
+  ],
+  "RANDOM_MISSION" : [
+    "[[%ANTAGONIST_TYPE]_MISSION]"
   ],
   "WHEN": [
     "<4>This morning at 0[Dice.2D5]00 hours",
@@ -18,16 +39,16 @@
   ],
 
   "WEIRD_SCIENCE_MISSION" : [
-    "<1>[when], a [DANGEROUS_THING] was reported by a local [news source|blogger|enthusiest]. We need to get this under control [MILD_MISSION_CONSEQUENCE].",
-    "<1>[COMPETING_ORGANIZATION] recently [WEIRD_SCIENCE_ACT]. [NON_HOSTILE_ACTION] must be accomplished [MILD_MISSION_CONSEQUENCE]."
+    "<1>[when], a [DANGEROUS_THING] was reported by a local [newspaper|police report|blogger|enthusiest]. We need to get this under control [MILD_MISSION_CONSEQUENCE]. [MILD_MISSION_OBJECTIVE]",
+    "<1>[COMPETING_ORGANIZATION] recently [WEIRD_SCIENCE_ACT]. [[%THREAT_LEVEL]_ACTION] must be accomplished [MILD_MISSION_CONSEQUENCE]."
   ],
 
   "DANGEROUS_THING" : [
     "undocumented cryptid, possibly a [%CRYPTID] or [%CRYPTID]-like creature,",
     "suspicious apparation, possibly a [GHOST_TYPE],",
-    "undocumented crash site",
+    "undocumented, unidentified, and unknown crash site",
     "pre-Cold War technology cache",
-    ""
+    "[PSYCHIC_EVENT]"
   ],
 
   "CRYPTID" : [
@@ -240,16 +261,37 @@
   "MILD_MISSION_CONSEQUENCE" : [
     "before this thing goes [public|critical|viral]",
     "before we lose the ability for containment",
-    "before they figure out a way to weaponize it",
+    "before [some idiot|[COMPETING_ORGANIZATION]|[TERRORIST_ORGANIZATION]] figures out a way to weaponize it",
     "before [some orgainization|[COMPETING_ORGANIZATION]|[TERRORIST_ORGANIZATION]] gets involved",
     "or we will be putting out [%WEIRD_SCIENCE_PREFIX][%WEIRD_SCIENCE_SUFFIX] fires until judgement day"
+  ],
+
+  "MILD_MISSION_OBJECTIVE" : [
+    "Stay undercover and try to settle this without too much attention.",
+    "Bury what you can, discredit who you need to. We don't want another [INCIDENT_CALLOUT] [fiasco|incident].",
+    "Evaluate this thing and make the call. Our resources are available if you can't handle it.",
+    ""
+  ],
+
+  "INCIDENT_CALLOUT" : [
+    "Burning-man coverup",
+    "Idiotville, Oregon",
+    "Ding Dong, TX",
+    "Toad Suck, Arkansas",
+    "Knockemstiff, OH",
+    "Bankock",
+    "Bowna Australia",
+    "Devilsmother",
+    "Great Kills",
+    "Mudchute",
+    "Satan's Kingdom"
   ],
   "COMPETING_ORGANIZATION" : [
     "NSA",
     "Tesladyne",
     "Delphi"
   ],
-  "NON_HOSTILE_ACTION" : [
+  "MILD_ACTION" : [
     "destroy any and all data",
     "plant false information to discredit their research",
     "retrieve a copy of this data so our people can come up with a plan",
