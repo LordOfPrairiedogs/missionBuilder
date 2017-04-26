@@ -18,6 +18,9 @@
     "COVERT",
     "RECON"
   ],
+  "RESCUE_SUBTYPE":[
+    "rescue a [person|animal|object] from [discovery|dangerous situation|a dangerous person|a group of people|a dangerous place"
+  ],
   "MISSION_PARAMETERS":[
     "Antagonist: [%ANTAGONIST_TYPE], Threat: [%THREAT_LEVEL], Mission: [%MISSION_TYPE]"
   ],
