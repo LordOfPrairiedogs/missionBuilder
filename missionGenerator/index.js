@@ -9,6 +9,7 @@ function MissionGenerator() {
     mgData.regexBracket = /(\[[\w|_|\s\.\%\<\>]+\])/;
     mgData.masterDictionary = {};
     mgData.usage = {};
+    mgData.loadState = null;
 }
 
 module.exports = MissionGenerator;
@@ -22,14 +23,24 @@ MissionGenerator.prototype.saveDictionary = function(filename){
         if (err) return console.log(err);
     });
 };
-MissionGenerator.prototype.loadDictionary = function(filename){
-    fs.readFile(filename, 'utf8', function (err,data) {
-        if (err) {
-            return console.log(err);
-        }
-        mgData.masterDictionary=JSON.parse(data);
-    });
+MissionGenerator.prototype.newDictionary = function(filename){
+    mgData.loadState = null;
+    var data = require(filename);
+    mgData.masterDictionary=data;
+    mgData.loadState = 'ready';
 };
+MissionGenerator.prototype.loadDictionary = function(filename){
+    var data = require(filename);
+    if (mgData.masterDictionary){
+        mgData.loadState = null;
+        for (var groupName in data){
+            mgData.addToGroup(groupName, data[groupName]);
+        }
+        mgData.loadState = 'ready';
+    } else {
+        mgData.newDictionary(filename);
+    }
+}
 
 MissionGenerator.prototype.resolveGroup = function(m){
     var groupNameBracket, phrase;
@@ -125,13 +136,22 @@ MissionGenerator.prototype.addToGroup = function (groupName, phrases){
 }
 
 MissionGenerator.prototype.resetUsage = function (phrase){
-        delete mgData.usage[phrase];
+    delete mgData.usage[phrase];
 }
 
-MissionGenerator.prototype.run = function (phrase){
-    phrase = phrase.replace(mgData.regexBracket, mgData.resolveGroup);
-    if(mgData.regexBracket.test(phrase)){
-       phrase = mgData.run(phrase);
+MissionGenerator.prototype.run = function (phrase, ctr){
+    if (!ctr){
+        ctr = 1;
     }
+    if (mgData.loadState == 'ready'){
+        phrase = phrase.replace(mgData.regexBracket, mgData.resolveGroup);
+        if(mgData.regexBracket.test(phrase)){
+            phrase = mgData.run(phrase);
+        }
+    } else if (ctr<10){
+        ctr++;
+        setTimeout(function(){mgData.run(phrase,ctr)}, 3000);
+    }
+
     return phrase;
 };
