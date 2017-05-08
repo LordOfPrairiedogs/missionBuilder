@@ -1,5 +1,5 @@
 {
-  "name": "mission_generator",
+  "name": "missionGenerator",
   "version": "1.0.0",
   "description": "takes a sentence and resolves words adlib style",
   "main": "index.js",
