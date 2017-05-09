@@ -1,0 +1,82 @@
+{
+  "MALE_NAME":[
+    "[MALE_FIRST_NAME] [MALE_LAST_NAME]"
+  ],
+
+  "MALE_FIRST_NAME":[
+    "[AFRICA_MALE_FIRST_NAME]",
+    "[NORTH_AMERICA_FIRST_NAME]",
+    "[SOUTH_AMERICA_FIRST_NAME]",
+    "[EUROPE_MALE_FIRST_NAME]",
+    "[ASIA_MALE_FIRST_NAME]"
+  ],
+  "AFRICA_MALE_FIRST_NAME":[
+    "Abdallah","Abdel-Rahman","Abdel-salam","Abdelkader","Abdoulaye","Adama","Ahmed","Ali","Antonio","Aziz","Bakary",
+    "Bandile","Banele","Beshoi","Bilal","Brahim","Djamel","Fadi","George","Habib","Halim","Hamza","Hassan","Hussein",
+    "Ibrahim","John","Karim","Khaled","Kirollos","Lethabo","Mahamadou","Mahmoud","Mamadou","Manuel","Mark","Mehdi",
+    "Melokuhle","Mina","Modibo","Mohamed","Mohammed","Moussa","Murad","Mustafa","Mustapha","Omar","Oumar","Peter",
+    "Rachid","Said","Samkelo","Sekou","Selim","Siyabonga","Souleymane","Taha","Tareq","Yassin","Youssef"
+  ],
+  "NORTH_AMERICA_MALE_FIRST_NAME":[
+    "Alexander","Alexis",
+    "Antonio","Arthur","Benjamin","Benjamín","Bernardo","Bruno","Caden","Carlos","Carter","Charles","Daniel",
+    "David","Deven","Diego","Dylan","Dyllan","Eric","Ethan","Elijah","Emmanuel","Eric","Ethan","Evens","Fabian","Félix",
+    "Gabriel","Ian","Jack","Jackson","Jacob","Jaden","James","Jameson","Jason","Javier","Jayden","Jeremiah","Jerónimo",
+    "John","Joseph","Joshua","Justin","Kevin","Keven","Liam","Logan","Lucas","Luis","Martín","Mason","Matthew","Michael",
+    "Nathan","Neil","Nicholas","Noah","Peterson","Richard","Robert","Ryan","Samuel","Sebastian","Stanley","Thomas",
+    "William","Wilson"
+  ],
+  "SOUTH_AMERICA_MALE_FIRST_NAME":[
+    "Adrián","Agustín","Aiden","Ajani","Alejandro","Alexander","Alexis","Alonso","Amir","Andrés","Antonio","Armaan",
+    "Arnav","Arthur","Aryan","Bernardo","Bruno","Caden","Carlos","César","Daniel","Davi","David","Deven","Diego",
+    "Elijah","Emmanuel","Ethan","Evens","Fabian","Felipe","Francisco","Félix","Gabriel","Heitor","Ian","Iker",
+    "Ishaan","Jackson","Jacob","Jaden","Javier","Jayden","Jeremiah","Jerónimo","Jesús","Joaquín","John","Joseph",
+    "Joshua","José","Juan","Justin","Kevin/Keven","Liam","Logan","Lucas","Luis","Martín","Mason","Mateo","Mateo",
+    "Matheus","Matthew","Matías","Maximiliano","Michael","Miguel","Moshe","Muhammad","Nicolás","Nicolás","Nikhil",
+    "Pedro","Rafael","Ramón","Ricardo","Rodrigo","Rohan","Ryan","Samuel","Santiago","Santino","Sebastian","Sebastián",
+    "Stanley","Stevenson","Suraj","Thiago","Thomas","Tomás","Vicente","Wilson"
+  ],
+  "SOUTH_AMERICA_FEMALE_FIRST_NAME":[
+    "Abigail","Abril","Agustina","Alexandra","Alice","Alysha","Amaia","Amanda","Amelia","Ana Paula",
+    "Angeline","Antonella","Ariana","Beatriz","Brianna","Camila","Camila","Carolina","Catalina",
+    "Chedeline","Concepción","Daniela","Dulce María","Elena","Elizabeth","Emely","Emilia",
+    "Emilia","Esther","Fernanda","Florencia","Gabriela","Gabrielle","Giovanna","Helena","Isabella",
+    "Isabelle","Emily","Isidora","Islande","Jada","Jessica","Josefa","Judeline","Julia","Julieta",
+    "Kamila","Laura","Liz","Lovelie/Lovely","Luciana","Luiza","Luz","Mabel","Maite","Manuela",
+    "Mariana","Martina","María","María Fernanda","María José","Mia","Micaela","Mikaela","Milagros",
+    "Mirlande","Myrlande","Nicole","Noemí","Paula","Ramona","Raquel","Rose-Merline","Salomé",
+    "Samantha","Sara","Sofia","Sofía","Sofía","Sophia","Tianna","Valentina","Valeria","Victoria",
+    "Widelene","Ximena","Zoe","Zoe"
+  ],
+  "NORTH_AMERICA_FEMALE_FIRST_NAME":[
+    "Aaliyah","Abigail","Aditi","Alice","Alina","Angela","Anjali","Anna","Anya","Arushi","Ashley","Ava","Avery",
+    "Barbara","Béatrice","Camila","Chana","Charlotte","Chaya","Chloe","Chloé","Claire","Diya","Dorothy","Elizabeth",
+    "Emily","Emma","Esther","Fatoumata","Florence","Grace","Harper","Isabella","Isabella,","Jennifer,","Kavya,",
+    "Leah","Lily","Linda,","London","Luciana","Lucía","Léa","Madison","Margaret","Maria","Mariam,","Martina","Mary",
+    "Mia","Miriam","Nisha","Nishi","Olivia","Patricia","Rachel","Riya","Rosalie,","Ruhi,","Sarah","Savannah",
+    "Serenity","Shreya","Skylar","Sofia","Sofía","Sophia,","Sophia","Susan","Valentina","Valeria","Victoria","Zoe","Zoé"
+  ],
+  "EUROPE_MALE_FIRST_NAME": [
+    ""
+  ],
+  "EUROPE_MALE_LAST_NAME": [
+    ""
+  ],
+  "ASIA_MALE_FIRST_NAME": [
+    ""
+  ],
+  "ASIA_MALE_LAST_NAME": [
+    ""
+  ],
+  "FEMALE_NAME":[
+    "[FEMALE_FIRST_NAME] [FEMALE_LAST_NAME]"
+  ],
+  "AFRICA_FEMALE_FIRST_NAME":[
+    "Aicha","Amahle","Amina","Aminata","Ashraqat","Awa","Aya","Bintou","Blessing","Dalal","Djeneba","Doha","Eisha",
+    "Esperanza","Faith","Fajr","Fanta","Farah","Farida","Fatiha","Fatima","Fatin","Fatma","Fatoumata","Gamalat","Gamila",
+    "Habiba","Hana","Hasnaa","Hawa","Hoda","Hosna","Hosniya","Irene","Isabel","Kadiatou","Karima","Khadija","Khawla",
+    "Kheiradia","Lesedi","Maha","Malak","Malikaima","Mariam","Marie","Marina","Marwa","Marwada","Mary","MaríadelCarmen",
+    "MaríaTeresa","Melokuhle","Meriem","Milagrosa","Minenhle","Mona","Nesreen","Oumou","Rachidadia","Rania","Reem","Rowan",
+    "Sahar","Saida","Salma","Sara","Sarah","Shahd","Shaimaa","Shayma","Suha","Thandolwethu"
+  ]
+}

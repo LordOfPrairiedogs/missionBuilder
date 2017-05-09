@@ -2,6 +2,7 @@
 'use strict';
 
 var fs = require('fs');
+var request = require('request');
 var mgData;
 
 function MissionGenerator() {
@@ -10,6 +11,13 @@ function MissionGenerator() {
     mgData.masterDictionary = {};
     mgData.usage = {};
     mgData.loadState = null;
+}
+
+function encodeQueryData(data) {
+    var ret = [];
+    for (var d in data)
+        ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+    return ret.join('&');
 }
 
 module.exports = MissionGenerator;
@@ -59,6 +67,32 @@ MissionGenerator.prototype.resolveGroup = function(m){
             sum += Math.floor((Math.random() * dice[1]) + 1);
         }
         phrase = sum.toString();
+    }else if (groupName.startsWith('NAME.')) {
+        var nameOptions = groupName.slice(6).split(".");
+        var data  = {"inc":"gender,name,nat","noinfo":"true"};
+        for (var x = 0; x<nameOptions.length; x++){
+            var section = nameOptions[x];
+            if (section.startsWith("nat")){
+                //countryCode
+                data['nat'] =  section.slice(3);
+            } else if (section.startsWith("gender")){
+                data['gender'] = section.slice(6);
+            }
+        }
+
+        // var data = { 'first name': 'George', 'last name': 'Jetson', 'age': 110 };
+        var querystring = encodeQueryData(data);
+        var url = 'https://randomuser.me/api/?'+ querystring;
+        console.log(url);
+
+        request(url, function (error, response, body) {
+            var results = JSON.parse(body)['results'];
+            var first = results[0];
+            var name = first.name;
+            phrase = name.first + " " + name.last;
+            console.log(phrase);
+        });
+        console.log("phrase" + phrase);
     }else if (groupName.startsWith('%')){
         groupName = groupName.replace('%','');
 
@@ -83,6 +117,7 @@ MissionGenerator.prototype.resolveGroup = function(m){
     } else {
         returnVal = phrase;
     }
+    console.log(returnVal);
     return returnVal;
 };
 

@@ -8,10 +8,9 @@ mg.loadDictionary('../../public/files/spycraft.json');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    var title = mg.run('[WEIRD_SCIENCE_MISSION] [MAIN]');
-
-
-    res.render('index', { title: title });
+    var content = mg.run('[NAME.natgb]');
+    var title = "Weird Science Mission";
+    res.render('index', { title: title, content: content });
 });
 
 module.exports = router;
