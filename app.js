@@ -4,9 +4,17 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var http = require('http');
+var io = require('socket.io');
 var index = require('./routes/index');
 var users = require('./routes/users');
+
+
+var MG = require('missionGenerator');
+var mg = new MG();
+mg.loadDictionary('../../public/files/majestic12.json');
+mg.loadDictionary('../../public/files/spycraft.json');
+
 
 var app = express();
 
@@ -43,8 +51,33 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-var listener = app.listen( function () {
+var listener =http.createServer(app).listen ( function () {
     console.log('Example app listening ' + listener.address().port);
-})
+});
+io = io.listen(listener);
+
+io.sockets.on("connection",function(socket){
+  /*Associating the callback function to be executed when client visits the page and
+   websocket connection is made */
+
+    var message_to_client = {
+        data:"Connection with the server established"
+    }
+    socket.send(JSON.stringify(message_to_client));
+  /*sending data to the client , this triggers a message event at the client side */
+    console.log('Socket.io Connection with the client established');
+    socket.on("message",function(data){
+      /*This event is triggered at the server side when client sends the data using socket.send() method */
+        data = mg.run(data,0,mg.run)
+        console.log(data);
+      /*Printing the data */
+        var ack_to_client = {
+            data: mg.run(data,0,mg.run)
+        }
+        socket.send(JSON.stringify(ack_to_client));
+      /*Sending the Acknowledgement back to the client , this will trigger "message" event on the clients side*/
+    });
+
+});
 
 module.exports = app;
