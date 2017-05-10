@@ -50,8 +50,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-var listener =http.createServer(app).listen ( function () {
+var port = process.env.PORT || 80;
+var listener =http.createServer(app).listen ( port, function () {
     console.log('Example app listening ' + listener.address().port);
 });
 io = io.listen(listener);
