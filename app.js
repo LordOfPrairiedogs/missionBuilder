@@ -50,7 +50,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-var port = process.env.PORT || 80;
+var port = 80;
 var listener =http.createServer(app).listen ( port, function () {
     console.log('Example app listening ' + listener.address().port);
 });
