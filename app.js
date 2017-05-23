@@ -8,7 +8,7 @@ var http = require('http');
 var io = require('socket.io');
 var index = require('./routes/index');
 var users = require('./routes/users');
-
+var build = require('./routes/build');
 
 var MG = require('missionGenerator');
 var mg = new MG();
@@ -32,6 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/build', build);
+app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

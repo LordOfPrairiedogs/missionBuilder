@@ -1,0 +1,21 @@
+doctype html
+html
+    head
+        title= title
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        link(rel='stylesheet', href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')
+        script(src='./jquery/jquery.js')
+        script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js')
+    body
+        block content
+            input#dict(value= dictionary, hidden)
+            #some-container-div
+            - var dict2= dictionary;
+            - var groups = Object.keys(dict2);
+            select
+                each variable in groups
+                    option(value=variable) #{variable}
+
+
+
+
