@@ -10,12 +10,8 @@ html
         block content
             input#dict(value= dictionary, hidden)
             #some-container-div
-            - var dict2= dictionary;
-            - var groups = Object.keys(dict2);
-            select
-                each variable in groups
-                    option(value=variable) #{variable}
-
-
-
-
+            - var groups = Object.keys(dictionary);
+            each groupName in groups
+                select
+                    each variable in dictionary[groupName]
+                        option(value=variable) #{variable}
