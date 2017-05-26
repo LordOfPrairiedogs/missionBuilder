@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <script type="text/javascript" src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+    <script type="text/javascript" src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js'></script>
+    <h1 id="test">This is a [test]</h1>
+
+    <script>
+        onload = function () {
+            var it = document.getElementById('myInput');
+            var result = $('#result');
+            it.addEventListener("input", function(e){
+                var regexBracket = /(\[[\w|_|\s\.\%\<\>]+\])/g;
+                if (regexBracket.test(it)){
+                    result.html(it.value.replace(regexBracket,resolveGroup));
+                }
+            },false);
+        };
+        resolveGroup = function (m){
+            var groupNameBracket, phrase;
+
+            var groupNameTop = m.replace('[', '').replace(']', '');
+            var optionList = [groupNameTop, 'a','b'];
+            var combo = $("<select></select>");
+            $.each(optionList, function (i, el) {
+                combo.append("<option>" + el + "</option>");
+            });
+
+            return combo.prop('outerHTML');
+        }
+    </script>
+    <input type=text id=myInput>
+    <div id="result"></div>
+
+</body>
+</html>
