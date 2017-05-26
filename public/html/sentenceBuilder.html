@@ -3,30 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script type="text/javascript" src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+    <script type="text/javascript" src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js'></script>
+    <style>
+        .ui-menu { width: 150px; }
+    </style>
 </head>
 <body>
 
-    <script type="text/javascript" src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
-    <script type="text/javascript" src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js'></script>
     <h1 id="test">This is a [test]</h1>
+<!-- A bunch of pseudo-code for making menu tree
+    when triggered (brackets found)
+        send groupName to resolveGroup
+            return childrenGroups (which may have brackets)
+        build ul
+            top-level = groupName (find-if appending; create-if top)
+            children = childrenGroups
+            if (child hasBrackets)
+                create next-level with brackets but don't resolve until selected
+            add listener selected
+                if (brackets found)
+                    send groupName to resolveGroup...
 
+-->
     <script>
         onload = function () {
+            $( function() {
+                $( "#menu" ).menu();
+                $( "#dialog" ).dialog({
+                    autoOpen: false,
+                    show: {
+                        effect: "blind",
+                        duration: 1000
+                    },
+                    hide: {
+                        effect: "explode",
+                        duration: 1000
+                    },
+                    buttons: {
+                        "Update the Resolver?": function() {
+                            var selectedValue = $( "#groupSelect").children(":selected").val();
+                            $('#myInput').val(selectedValue).trigger("keypress");
+                            $( this ).dialog( "close" );
+                        },
+                        Cancel: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+            } );
             var it = document.getElementById('myInput');
             var result = $('#result');
             it.addEventListener("input", function(e){
                 var regexBracket = /(\[[\w|_|\s\.\%\<\>]+\])/g;
                 if (regexBracket.test(it)){
-                    result.html(it.value.replace(regexBracket,resolveGroup));
+                    result.html(it.value.replace(regexBracket,buttonize));
                 }
             },false);
+            $('#newValue').hide();
         };
-        resolveGroup = function (m){
-            var groupNameBracket, phrase;
+        createEntry = function(ref) {
+            if ($(ref).val() === "new"){
+                $('#newValue').show();
+            }
+        }
+        buttonize = function (m){
+            var groupNameTop = m.replace('[', '').replace(']', '');
+            var buttonCnt = $('.ui-button').length;
+            var button = '<button class="ui-button ui-widget ui-corner-all" ' +
+                'id="'+groupNameTop+"_"+(buttonCnt+1)+'" ' +
+                'onclick="openGroupDlg(this)">'+groupNameTop+'</button>';
 
+            return button;
+        }
+        openGroupDlg = function (m) {
+            var groupName = m.textContent;
+            $( "#groupName" ).val (groupName);
+            $( "#dropdownDiv").html(resolveGroup(groupName));
+            $( "#groupSelect").change(function(){
+                createEntry($(this).children(":selected"));
+            });
+            $( "#dialog" ).dialog("open");
+        }
+        resolveGroup = function (m){
             var groupNameTop = m.replace('[', '').replace(']', '');
             var optionList = [groupNameTop, 'a','b'];
-            var combo = $("<select></select>");
+            var combo = $("<select id='groupSelect'></select>");
+            combo.append("<option value='new'>Add new value...</option>")
             $.each(optionList, function (i, el) {
                 combo.append("<option>" + el + "</option>");
             });
@@ -36,6 +100,58 @@
     </script>
     <input type=text id=myInput>
     <div id="result"></div>
+
+    <input id = "combo1" type="text" list="browsers" onChange="createEntry(this)"/>
+    <datalist id="browsers">
+        <option value="Internet Explorer">
+        <option value="Firefox">
+        <option value="Chrome">
+        <option value="Opera">
+        <option value="Safari">
+        <option value="Other">
+    </datalist>
+
+
+    <ul id="menu">
+        <li class="ui-state-disabled"><div>Toys (n/a)</div></li>
+        <li><div>Books</div></li>
+        <li><div>Clothing</div></li>
+        <li><div>Electronics</div>
+            <ul>
+                <li class="ui-state-disabled"><div>Home Entertainment</div></li>
+                <li><div>Car Hifi</div></li>
+                <li><div>Utilities</div></li>
+            </ul>
+        </li>
+        <li><div>Movies</div></li>
+        <li><div>Music</div>
+            <ul>
+                <li><div>Rock</div>
+                    <ul>
+                        <li><div>Alternative</div></li>
+                        <li><div>Classic</div></li>
+                    </ul>
+                </li>
+                <li><div>Jazz</div>
+                    <ul>
+                        <li><div>Freejazz</div></li>
+                        <li><div>Big Band</div></li>
+                        <li><div>Modern</div></li>
+                    </ul>
+                </li>
+                <li><div>Pop</div></li>
+            </ul>
+        </li>
+        <li class="ui-state-disabled"><div>Specials (n/a)</div></li>
+    </ul>
+    <div id="dialog" title="Edit Group">
+        <input type="text" id="groupName"/>
+        <div id="dropdownDiv"></div>
+        <input id="newValue" type="text" />
+    </div>
+
+
+
 
 </body>
 </html>
