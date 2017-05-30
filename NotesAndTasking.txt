@@ -1,0 +1,34 @@
+Tasking
+* Core
+TODO multi-selection / no repeats
+TODO imagery
+TODO Test: Does save function save fully-resolved value or child data?
+TODO move core JSON to core.json
+TODO Handle random names
+
+* Builder
+TODO Logic to check bracketed expression (BE)
+TODO --if BE not in groupList, option to create, option to child-ify + add groupName
+TODO --move selection to a) existing group; b) new group (checks first)
+
+
+* Display
+TODO templates
+
+Notes
+* Heirarchy
+[GENDER] {male, female}
+[[GENDER]_HONORIFIC] (male_honorific){mr}
+[[GENDER]_OBJECTIVE_PERSONAL_PRONOUN] (male_objective_personal_pronoun: also [HIM_HER]) {him}
+[[GENDER]_POSSESSIVE_PERSONAL_PRONOUN] (male_objective_personal_pronoun: also [HIS_HERS]) {his}
+
+
+[[NATIONALITY]_[FIRST_NAME]] (russian_[FIRST_NAME])
+
+[THEME] {horror, spaceOpera, spyThriller, blackOps}
+[LOCATION] (where the adventure occurs) {Prague}
+[POWER_LEVEL] (measure of criticality, complexity, and general weirdness) {TODO: official word?)
+[[POWER_LEVEL]_[THEME]_OBJECTIVE] (feetWet_blackops_objective) {capture the [[POWER_LEVEL]_[THEME]_ENEMY]}
+[[POWER_LEVEL]_[THEME]_COMPLICATION] (feetWet_blackops_complication) {who has secrets that could expose key safehouses}
+[[POWER_LEVEL]_[THEME]_FAILURE_EFFECT] (feetWet_blackops_complication) {before he leaves [[LOCATION]_CITY]}
+[[POWER_LEVEL]_[THEME]_ENEMY] (feetWet_blackops_enemy) {Glavnoje Razvedyvatel'noje Upravlenije (GRU - Russian Military Spy Agency)}
