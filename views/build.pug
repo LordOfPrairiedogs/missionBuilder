@@ -6,6 +6,87 @@ html
         link(rel='stylesheet', href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')
         script(src='./jquery/jquery.js')
         script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js')
+        script.
+            onload = function () {
+
+                $(function () {
+                    $("#menu").menu();
+                    $("#dialog").dialog({
+                        autoOpen: false,
+                        show: {
+                            effect: "blind",
+                            duration: 1000
+                        },
+                        hide: {
+                            effect: "explode",
+                            duration: 1000
+                        },
+                        buttons: {
+                            "Update the Resolver?": function () {
+                                var selectedValue = $("#groupSelect").children(":selected").val();
+                                if (selectedValue === 'new_value') {
+                                    selectedValue = $("#newValue").val();
+                                }
+                                var myInputVal = $('#myInput').val();
+                                var groupNameVal = $('#groupName').val();
+                                var newVal = myInputVal.replace('[' + groupNameVal + ']', selectedValue);
+                                $('#myInput').val(newVal);
+                                findBrackets();
+                                $(this).dialog("close");
+                            },
+                            Cancel: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                });
+                var it = document.getElementById('myInput');
+                it.addEventListener("input", findBrackets, false);
+                $('#newValue').hide();
+            };
+
+            findBrackets = function () {
+                var regexBracket = /(\[[\w|_|\s\.\%\<\>]+\])/g;
+                var it = document.getElementById('myInput');
+                var result = $('#result');
+                if (regexBracket.test(it)) {
+                    result.html(it.value.replace(regexBracket, buttonize));
+                }
+            }
+            createEntry = function (ref) {
+                if ($(ref).val() === "new_value") {
+                    $('#newValue').show();
+                }
+            }
+            buttonize = function (m) {
+                var groupNameTop = m.replace('[', '').replace(']', '');
+                var buttonCnt = $('.ui-button').length;
+                var button = '<button class="ui-button ui-widget ui-corner-all" ' +
+                        'id="' + groupNameTop + "_" + (buttonCnt + 1) + '" ' +
+                        'onclick="openGroupDlg(this)">' + groupNameTop + '</button>';
+                return button;
+            }
+            openGroupDlg = function (m) {
+                var groupName = m.textContent;
+                $("#groupName").val(groupName);
+                $("#dropdownDiv").html(resolveGroup(groupName));
+                $("#groupSelect").change(function () {
+                    createEntry($(this).children(":selected"));
+                });
+                $("#dialog").dialog("open");
+            }
+            resolveGroup = function (m) {
+                var groupNameTop = m.replace('[', '').replace(']', '');
+                var groups = Object.keys($('#dict').val());
+                var options = groups[groupNameTop];
+                var combo = $("<select id='groupSelect'></select>");
+                combo.append("<option value='new_value'>Add new value...</option>")
+                $.each(options, function (i, el) {
+                    combo.append("<option>" + el + "</option>");
+                });
+                return combo.prop('outerHTML');
+            }
+
     body
         block content
             input#dict(value= dictionary, hidden)
@@ -15,3 +96,9 @@ html
                 select
                     each variable in dictionary[groupName]
                         option(value=variable) #{variable}
+            input#myInput(type=text)
+            div#result
+            div#dialog(title="Edit Group")
+                input#groupName
+                div#dropdownDiv
+                input#newValue(type='text')

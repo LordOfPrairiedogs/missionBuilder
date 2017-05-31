@@ -44,7 +44,14 @@
                     buttons: {
                         "Update the Resolver?": function() {
                             var selectedValue = $( "#groupSelect").children(":selected").val();
-                            $('#myInput').val(selectedValue).trigger("keypress");
+                            if (selectedValue==='new_value'){
+                                selectedValue = $( "#newValue").val();
+                            }
+                            var myInputVal = $('#myInput').val();
+                            var groupNameVal = $('#groupName').val();
+                            var newVal = myInputVal.replace('['+groupNameVal+']',selectedValue);
+                            $('#myInput').val(newVal);
+                            findBrackets();
                             $( this ).dialog( "close" );
                         },
                         Cancel: function() {
@@ -54,17 +61,19 @@
                 });
             } );
             var it = document.getElementById('myInput');
-            var result = $('#result');
-            it.addEventListener("input", function(e){
-                var regexBracket = /(\[[\w|_|\s\.\%\<\>]+\])/g;
-                if (regexBracket.test(it)){
-                    result.html(it.value.replace(regexBracket,buttonize));
-                }
-            },false);
+            it.addEventListener("input", findBrackets, false);
             $('#newValue').hide();
         };
+        findBrackets = function( ) {
+            var regexBracket = /(\[[\w|_|\s\.\%\<\>]+\])/g;
+            var it = document.getElementById('myInput');
+            var result = $('#result');
+            if (regexBracket.test(it)){
+                result.html(it.value.replace(regexBracket,buttonize));
+            }
+        }
         createEntry = function(ref) {
-            if ($(ref).val() === "new"){
+            if ($(ref).val() === "new_value"){
                 $('#newValue').show();
             }
         }
@@ -90,7 +99,7 @@
             var groupNameTop = m.replace('[', '').replace(']', '');
             var optionList = [groupNameTop, 'a','b'];
             var combo = $("<select id='groupSelect'></select>");
-            combo.append("<option value='new'>Add new value...</option>")
+            combo.append("<option value='new_value'>Add new value...</option>")
             $.each(optionList, function (i, el) {
                 combo.append("<option>" + el + "</option>");
             });
@@ -101,49 +110,6 @@
     <input type=text id=myInput>
     <div id="result"></div>
 
-    <input id = "combo1" type="text" list="browsers" onChange="createEntry(this)"/>
-    <datalist id="browsers">
-        <option value="Internet Explorer">
-        <option value="Firefox">
-        <option value="Chrome">
-        <option value="Opera">
-        <option value="Safari">
-        <option value="Other">
-    </datalist>
-
-
-    <ul id="menu">
-        <li class="ui-state-disabled"><div>Toys (n/a)</div></li>
-        <li><div>Books</div></li>
-        <li><div>Clothing</div></li>
-        <li><div>Electronics</div>
-            <ul>
-                <li class="ui-state-disabled"><div>Home Entertainment</div></li>
-                <li><div>Car Hifi</div></li>
-                <li><div>Utilities</div></li>
-            </ul>
-        </li>
-        <li><div>Movies</div></li>
-        <li><div>Music</div>
-            <ul>
-                <li><div>Rock</div>
-                    <ul>
-                        <li><div>Alternative</div></li>
-                        <li><div>Classic</div></li>
-                    </ul>
-                </li>
-                <li><div>Jazz</div>
-                    <ul>
-                        <li><div>Freejazz</div></li>
-                        <li><div>Big Band</div></li>
-                        <li><div>Modern</div></li>
-                    </ul>
-                </li>
-                <li><div>Pop</div></li>
-            </ul>
-        </li>
-        <li class="ui-state-disabled"><div>Specials (n/a)</div></li>
-    </ul>
     <div id="dialog" title="Edit Group">
         <input type="text" id="groupName"/>
         <div id="dropdownDiv"></div>
