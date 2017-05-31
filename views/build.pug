@@ -11,6 +11,17 @@ html
 
                 $(function () {
                     $("#menu").menu();
+                    $("#newGroupBtn").button(
+                    {
+                        icon: "ui-icon-document", showLabel:false
+                    }).click(function (event) {
+                        event.preventDefault();
+                    });
+                    $('#addNewValue').button().click(function (event){
+                        alert ('boing');
+                    });
+                    $("#normalControlGroup").controlgroup();
+                    $("#extraControlGroup").controlgroup().hide();
                     $("#dialog").dialog({
                         autoOpen: false,
                         show: {
@@ -27,7 +38,7 @@ html
                                 if (selectedValue === 'new_value') {
                                     selectedValue = $("#newValue").val();
                                 }
-                                var myInputVal = $('#myInput').val();
+                                var myInputVal = $('#myInput').val().toUpperCase();
                                 var groupNameVal = $('#groupName').val();
                                 var newVal = myInputVal.replace('[' + groupNameVal + ']', selectedValue);
                                 $('#myInput').val(newVal);
@@ -53,13 +64,9 @@ html
                     result.html(it.value.replace(regexBracket, buttonize));
                 }
             }
-            createEntry = function (ref) {
-                if ($(ref).val() === "new_value") {
-                    $('#newValue').show();
-                }
-            }
+
             buttonize = function (m) {
-                var groupNameTop = m.replace('[', '').replace(']', '');
+                var groupNameTop = m.replace('[', '').replace(']', '').toUpperCase();
                 var buttonCnt = $('.ui-button').length;
                 var button = '<button class="ui-button ui-widget ui-corner-all" ' +
                         'id="' + groupNameTop + "_" + (buttonCnt + 1) + '" ' +
@@ -70,21 +77,24 @@ html
                 var groupName = m.textContent;
                 $("#groupName").val(groupName);
                 $("#dropdownDiv").html(resolveGroup(groupName));
-                $("#groupSelect").change(function () {
-                    createEntry($(this).children(":selected"));
-                });
                 $("#dialog").dialog("open");
             }
-            resolveGroup = function (m) {
-                var groupNameTop = m.replace('[', '').replace(']', '');
+            resolveGroup = function (groupNameTop) {
                 var dict = JSON.parse($('#dict').val());
                 var groups = Object.keys(dict);
-                var options = dict[groupNameTop];
                 var combo = $("<select id='groupSelect'></select>");
-                combo.append("<option value='new_value'>Add new value...</option>")
-                $.each(options, function (i, el) {
-                    combo.append("<option>" + el + "</option>");
-                });
+
+                if (groups.indexOf(groupNameTop)>-1){
+
+                    var options = dict[groupNameTop];
+                    $.each(options, function (i, el) {
+                        combo.append("<option>" + el + "</option>");
+                    });
+                } else {
+                    //new group
+
+                }
+
                 return combo.prop('outerHTML');
             }
 
@@ -99,7 +109,15 @@ html
             //            option(value=variable) #{variable}
             input#myInput(type=text)
             div#result
-            div#dialog(title="Edit Group")
-                input#groupName
-                div#dropdownDiv
+            div#dialog(title="Group Worker")
+                fieldset
+                    legend Group Editor
+                    div#normalControlGroup
+                        input#groupName
+                        a#newGroupBtn
+                        div#dropdownDiv
+                fieldset
+                    legend bbbb
+                    div#extraControlGroup bbb
+                a#addNewValue Add new value
                 input#newValue(type='text')
