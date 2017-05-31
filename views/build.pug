@@ -77,8 +77,9 @@ html
             }
             resolveGroup = function (m) {
                 var groupNameTop = m.replace('[', '').replace(']', '');
-                var groups = Object.keys($('#dict').val());
-                var options = groups[groupNameTop];
+                var dict = JSON.parse($('#dict').val());
+                var groups = Object.keys(dict);
+                var options = dict[groupNameTop];
                 var combo = $("<select id='groupSelect'></select>");
                 combo.append("<option value='new_value'>Add new value...</option>")
                 $.each(options, function (i, el) {
@@ -91,11 +92,11 @@ html
         block content
             input#dict(value= dictionary, hidden)
             #some-container-div
-            - var groups = Object.keys(dictionary);
-            each groupName in groups
-                select
-                    each variable in dictionary[groupName]
-                        option(value=variable) #{variable}
+            //- var groups = Object.keys(dictionary);
+            //each groupName in groups
+            //    select
+            //        each variable in dictionary[groupName]
+            //            option(value=variable) #{variable}
             input#myInput(type=text)
             div#result
             div#dialog(title="Edit Group")
