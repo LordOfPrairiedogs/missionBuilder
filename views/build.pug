@@ -6,7 +6,13 @@ html
         link(rel='stylesheet', href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')
         script(src='./jquery/jquery.js')
         script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js')
+        style(type='text/css').
+            .ui-widget input {
+                width: 300px;
+            }
+
         script.
+            var regexBracket = /(\[[\w|_|\s\.\%\<\>]+\])/g;
             onload = function () {
 
                 $(function () {
@@ -15,13 +21,15 @@ html
                     {
                         icon: "ui-icon-document", showLabel:false
                     }).click(function (event) {
+                        $("#dialog").toggleClass("dialog_wide");
                         event.preventDefault();
                     });
                     $('#addNewValue').button().click(function (event){
-                        alert ('boing');
+                        $('#newValue').show();
                     });
+                    $("#extraCGFieldset").hide();
                     $("#normalControlGroup").controlgroup();
-                    $("#extraControlGroup").controlgroup().hide();
+                    $("#extraControlGroup").controlgroup();
                     $("#dialog").dialog({
                         autoOpen: false,
                         show: {
@@ -32,6 +40,7 @@ html
                             effect: "explode",
                             duration: 1000
                         },
+                        width:800,
                         buttons: {
                             "Update the Resolver?": function () {
                                 var selectedValue = $("#groupSelect").children(":selected").val();
@@ -57,7 +66,6 @@ html
             };
 
             findBrackets = function () {
-                var regexBracket = /(\[[\w|_|\s\.\%\<\>]+\])/g;
                 var it = document.getElementById('myInput');
                 var result = $('#result');
                 if (regexBracket.test(it)) {
@@ -114,10 +122,12 @@ html
                     legend Group Editor
                     div#normalControlGroup
                         input#groupName
-                        a#newGroupBtn
+                        span
+                            a#newGroupBtn
                         div#dropdownDiv
-                fieldset
+                fieldset#extraCGFieldset
                     legend bbbb
                     div#extraControlGroup bbb
-                a#addNewValue Add new value
-                input#newValue(type='text')
+                span
+                    input#newValue(type='text')
+                    a#addNewValue Add new value
