@@ -12,7 +12,7 @@ var build = require('./routes/build');
 
 var MG = require('missionGenerator');
 var mg = new MG();
-mg.loadDictionary('../../public/files/majestic12.json');
+// mg.loadDictionary('../../public/files/majestic12.json');
 mg.loadDictionary('../../public/files/spycraft.json');
 
 

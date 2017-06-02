@@ -10,124 +10,240 @@ html
             .ui-widget input {
                 width: 300px;
             }
+            .user-input-field {
+                width: 300px;
+                border-style: solid;
+            }
+            .option-btn {
+                background-color: gold;
+            }
+            .group-btn {
+                background-color: greenyellow;
+            }
+            .ui-autocomplete {
+                max-height: 100px;
+                overflow-y: auto;
+                /* prevent horizontal scrollbar */
+                overflow-x: hidden;
+            }
 
+            /* IE 6 doesn't support max-height
+             * we use height instead, but this forces the menu to always be this tall
+             */
+            * html .ui-autocomplete {
+                height: 100px;
+            }
+
+            #dropdownUl .ui-selecting {
+                background: #FECA40;
+            }
+
+            #dropdownUl .ui-selected {
+                background: #F39814;
+                color: white;
+            }
+
+            #dropdownUl {
+                overflow: auto;
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                height: 50%;
+            }
+
+            #dropdownUl li {
+                padding: 0.4em;
+                max-height: 40px;
+                border-style: outset;
+                overflow: hidden;
+            }
         script.
             var regexBracket = /(\[[\w|_|\s\.\%\<\>]+\])/g;
+            var regexMustache = /(\{[\w|_|\s\.\%\<\>]+\})/g;
+            var dict;
+            var groups;
+
             onload = function () {
 
+                dict = JSON.parse($('#dict').val());
+                groups = Object.keys(dict);
+
                 $(function () {
-                    $("#menu").menu();
-                    $("#newGroupBtn").button(
-                    {
-                        icon: "ui-icon-document", showLabel:false
-                    }).click(function (event) {
-                        $("#dialog").toggleClass("dialog_wide");
-                        event.preventDefault();
-                    });
-                    $('#addNewValue').button().click(function (event){
-                        $('#newValue').show();
-                    });
-                    $("#extraCGFieldset").hide();
-                    $("#normalControlGroup").controlgroup();
-                    $("#extraControlGroup").controlgroup();
-                    $("#dialog").dialog({
-                        autoOpen: false,
-                        show: {
-                            effect: "blind",
-                            duration: 1000
-                        },
-                        hide: {
-                            effect: "explode",
-                            duration: 1000
-                        },
-                        width:800,
-                        buttons: {
-                            "Update the Resolver?": function () {
-                                var selectedValue = $("#groupSelect").children(":selected").val();
-                                if (selectedValue === 'new_value') {
-                                    selectedValue = $("#newValue").val();
-                                }
-                                var myInputVal = $('#myInput').val().toUpperCase();
-                                var groupNameVal = $('#groupName').val();
-                                var newVal = myInputVal.replace('[' + groupNameVal + ']', selectedValue);
-                                $('#myInput').val(newVal);
-                                findBrackets();
-                                $(this).dialog("close");
-                            },
-                            Cancel: function () {
-                                $(this).dialog("close");
-                            }
+                    $('#groupName').autocomplete({source: groups});
+                    $('#groupName').change( function (event) {
+                        var theGroup = $(this).val();
+                        var options = dict[theGroup];
+
+                        if (options && options.length>0){
+                            //create options
+                            $("#newGroupBtn").hide();
+                            addOptionsToDropdownDiv(options);
+                        } else {
+                            $("#newGroupBtn").show();
                         }
                     });
+                    $('#dropdownUl').selectable({
+                        stop: function () {
+                            $(".ui-selected", this).each(function () {
+                                var text = $(this).text();
+                                if (text === "Create New Option..."){
+                                    //open dialog
+                                    $("#dialog").dialog("open");
+                                }
+                            });
+                        }
+                    });
+
+                    $("#newGroupBtn").button(
+                    {
+                        icon: "ui-icon-document"
+                    }).click(function (event) {
+                        event.preventDefault();
+                    });
+
+
+                    $("#normalControlGroup").controlgroup();
+
                 });
                 var it = document.getElementById('myInput');
                 it.addEventListener("input", findBrackets, false);
                 $('#newValue').hide();
+
+                $("#dialog").dialog({
+                    //autoOpen: false,
+                    show: {
+                        effect: "blind",
+                        duration: 1000
+                    },
+                    hide: {
+                        effect: "explode",
+                        duration: 1000
+                    },
+                    modal: true,
+                    buttons: {
+                        "Add": function () {
+                            var combo = $("#dropdownUl");
+
+                            var optionval = $("#newOption").text();
+                            combo.append("<li>" + optionval + "</li>");
+                            //TODO call websocket to update group
+                            $("#newOption").text("")
+                            $(this).dialog("close");
+                        },
+                        Cancel: function () {
+                            $(this).dialog("close");
+                            $("#newOption").text("")
+                        }
+                    }
+                });
+
+
             };
 
             findBrackets = function () {
-                var it = document.getElementById('myInput');
+                var it = document.getElementById('myInput').textContent;
                 var result = $('#result');
-                if (regexBracket.test(it)) {
-                    result.html(it.value.replace(regexBracket, buttonize));
-                }
+                var temp = it.replace(regexMustache, buttonize);
+                result.html(temp.replace(regexBracket, optionize));
             }
-
             buttonize = function (m) {
-                var groupNameTop = m.replace('[', '').replace(']', '').toUpperCase();
+                if (m.match("{")){
+                    btnType = "option";
+                } else if (m.match("\\[")){
+                    btnType = "group";
+                }
+                var groupName = m.replace('{', '').replace('}', '').replace('[','').replace(']','');
                 var buttonCnt = $('.ui-button').length;
-                var button = '<button class="ui-button ui-widget ui-corner-all" ' +
-                        'id="' + groupNameTop + "_" + (buttonCnt + 1) + '" ' +
-                        'onclick="openGroupDlg(this)">' + groupNameTop + '</button>';
+                var btnClass = btnType+"-btn";
+                var button = '<button class="ui-button ui-widget ui-corner-all '+ btnClass +
+                    '" id="' + groupName + ":" + (buttonCnt + 1) +
+                    '" onclick="openGroupDlg(this)">' + groupName + '</button>';
                 return button;
             }
-            openGroupDlg = function (m) {
-                var groupName = m.textContent;
-                $("#groupName").val(groupName);
-                $("#dropdownDiv").html(resolveGroup(groupName));
-                $("#dialog").dialog("open");
-            }
-            resolveGroup = function (groupNameTop) {
-                var dict = JSON.parse($('#dict').val());
-                var groups = Object.keys(dict);
-                var combo = $("<select id='groupSelect'></select>");
-
-                if (groups.indexOf(groupNameTop)>-1){
-
+            optionize = function (m) {
+                var groupname = m.replace('[', '').replace(']', '');
+                var groupNameTop = groupname.toUpperCase();
+                if (groups.indexOf(groupNameTop) > -1) {
+                    var inputCnt = $(':input').length;
+                    var combo = $("<select id='"+groupname+":" + inputCnt + "' onchange='updateResolver(this)'></select>");
+                    combo.append("<option></option>");
+                    combo.append("<option>Edit this group...</option>");
                     var options = dict[groupNameTop];
                     $.each(options, function (i, el) {
                         combo.append("<option>" + el + "</option>");
                     });
+                    return combo.prop('outerHTML');
                 } else {
-                    //new group
-
+                    return buttonize(m);
+                }
+            }
+            updateResolver = function (m) {
+                var selectedVal = $(m).children(":selected").val();
+                var regTst = /^(\w+)/;
+                var idVal = regTst.exec($(m).prop('id'));
+                var groupNameVal = idVal[1];
+                if (selectedVal == 'edit'){
+                    //add group to editor, add groups to options
+                } else if (selectedVal) {
+                    //update the resolver
+                    var myInputVal = document.getElementById('myInput').textContent;
+                    var newVal = myInputVal.replace('[' + groupNameVal + ']', selectedVal);
+                    document.getElementById('myInput').textContent = newVal;
+                    findBrackets();
+                } else {
+                    //nothing selected (empty one)
+                }
+            }
+            openGroupDlg = function (m) {
+                //will need to populate based on available info
+                //populate options if {}, group if []
+                //disable add button if exist, etc
+                var isOption = $(m).hasClass('option-btn');
+                var textContext = m.textContent;
+                if (isOption){
+                    $("#groupName").val("");
+                    addOptionsToDropdownDiv([textContext]);
+                } else {
+                    $("#groupName").val(textContext);
+                    $("#dropdownUl").empty();
                 }
 
-                return combo.prop('outerHTML');
             }
+            addOptionsToDropdownDiv = function (options) {
+                var combo = $("#dropdownUl");
+                combo.empty();
+                combo.append("<li>Create New Option...</li>");
+                $.each(options, function (i, el) {
+                    combo.append("<li>" + el + "</li>");
+                });
+            }
+
 
     body
         block content
             input#dict(value= dictionary, hidden)
-            #some-container-div
-            //- var groups = Object.keys(dictionary);
-            //each groupName in groups
-            //    select
-            //        each variable in dictionary[groupName]
-            //            option(value=variable) #{variable}
-            input#myInput(type=text)
+
+            div#myInput(type=text, contenteditable="true", class="user-input-field")
             div#result
-            div#dialog(title="Group Worker")
-                fieldset
-                    legend Group Editor
-                    div#normalControlGroup
-                        input#groupName
-                        span
-                            a#newGroupBtn
-                        div#dropdownDiv
-                fieldset#extraCGFieldset
-                    legend bbbb
-                    div#extraControlGroup bbb
-                span
-                    input#newValue(type='text')
-                    a#addNewValue Add new value
+
+
+
+            fieldset
+                legend Group Editor
+                div#normalControlGroup
+                    input#groupName
+                    span
+                        a#newGroupBtn
+                    ul#dropdownUl
+            div#dialog(title="New Option")
+                div#newOption(type=text, contenteditable="true", style="border-style: ridge;")
+
+
+
+
+
+
+
+
+
+
