@@ -21,6 +21,18 @@ function encodeQueryData(data) {
     return ret.join('&');
 }
 
+function arrayUnique(array) {
+    var a = array.concat();
+    for(var i=0; i<a.length; ++i) {
+        for(var j=i+1; j<a.length; ++j) {
+            if(a[i] === a[j])
+                a.splice(j--, 1);
+        }
+    }
+
+    return a;
+}
+
 module.exports = MissionGenerator;
 
 MissionGenerator.prototype.addDictionary = function(dictionaryData){
@@ -122,15 +134,17 @@ MissionGenerator.prototype.addToGroup = function (groupName, phrases, addToDelta
         phrases = [phrases];
     }
     if (groupList){
-        mgData.masterDictionary[groupName]=groupList.concat(phrases);
+        mgData.masterDictionary[groupName]=arrayUnique(groupList.concat(phrases));
     }else{
         mgData.masterDictionary[groupName] = phrases;
     }
-    groupList = mgData.deltaDictionary;
-    if (groupList && addToDelta){
-        mgData.deltaDictionary[groupName]=groupList.concat(phrases);
-    }else{
-        mgData.deltaDictionary[groupName] = phrases;
+    if (addToDelta){
+        groupList = mgData.deltaDictionary[groupName];
+        if (groupList){
+            mgData.deltaDictionary[groupName]=arrayUnique(groupList.concat(phrases));
+        }else{
+            mgData.deltaDictionary[groupName] = phrases;
+        }
     }
 }
 

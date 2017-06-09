@@ -5,6 +5,7 @@ html
         link(rel='stylesheet', href='/stylesheets/style.css')
         link(rel='stylesheet', href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')
         script(src='./jquery/jquery.js')
+        script(src='/javascript/socket.io-client/dist/socket.io.js')
         script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js')
         style(type='text/css').
             .ui-widget input {
@@ -62,11 +63,33 @@ html
             var regexMustache = /(\{[\w|_|\s\.\%\<\>]+\})/g;
             var dict;
             var groups;
+            var createMsg = 'Create New Option...';
 
             onload = function () {
 
                 dict = JSON.parse($('#dict').val());
                 groups = Object.keys(dict);
+                var socket = io.connect("/");
+                /*Initializing the connection with the server via websockets */
+                socket.on("message", function (message) {
+                    /*
+                     When server sends data to the client it will trigger "message" event on the client side , by
+                     using socket.on("message") , one cna listen for the ,message event and associate a callback to
+                     be executed . The Callback function gets the dat sent from the server
+                     */
+                    console.log("Message from the server arrived")
+                    message = JSON.parse(message);
+                    //console.log(message);
+                    /*converting the data into JS object */
+                    if (message.dict){
+                        dict = message.dict;
+                        $('#dict').val(JSON.stringify(dict));
+                        groups = Object.keys(dict);
+                        $('#groupName').autocomplete();
+                    }
+                    /*appending the data on the page using Jquery */
+                });
+
 
                 $(function () {
                     $('#groupName').autocomplete({source: groups});
@@ -76,17 +99,14 @@ html
 
                         if (options && options.length>0){
                             //create options
-                            $("#newGroupBtn").hide();
                             addOptionsToDropdownDiv(options);
-                        } else {
-                            $("#newGroupBtn").show();
                         }
                     });
                     $('#dropdownUl').selectable({
                         stop: function () {
                             $(".ui-selected", this).each(function () {
                                 var text = $(this).text();
-                                if (text === "Create New Option..."){
+                                if (text === createMsg){
                                     //open dialog
                                     $("#dialog").dialog("open");
                                 }
@@ -99,8 +119,21 @@ html
                         icon: "ui-icon-document"
                     }).click(function (event) {
                         event.preventDefault();
+                        var entryList = [];
+                        $('#dropdownUl li').each(function(i){
+                            var entry = $(this).text();
+                            if (entry != createMsg){
+                                entryList.push(entry);
+                            }
+                        })
+                        var data = {
+                            /*creating a Js ojbect to be sent to the server*/
+                            groupName: $('#groupName').val(), /*getting the text input data      */
+                            entryList: entryList,
+                            author: 'client'
+                        }
+                        socket.emit("addToGroup", JSON.stringify(data));
                     });
-
 
                     $("#normalControlGroup").controlgroup();
 
@@ -110,7 +143,7 @@ html
                 $('#newValue').hide();
 
                 $("#dialog").dialog({
-                    //autoOpen: false,
+                    autoOpen: false,
                     show: {
                         effect: "blind",
                         duration: 1000
@@ -123,10 +156,15 @@ html
                     buttons: {
                         "Add": function () {
                             var combo = $("#dropdownUl");
-
                             var optionval = $("#newOption").text();
-                            combo.append("<li>" + optionval + "</li>");
-                            //TODO call websocket to update group
+                            $('#dropdownUl li').each(function (i) {
+                                var entry = $(this).text();
+                                if (entry != optionval) {
+                                    combo.append("<li>" + optionval + "</li>");
+                                }
+                            })
+
+
                             $("#newOption").text("")
                             $(this).dialog("close");
                         },
@@ -167,7 +205,7 @@ html
                     var inputCnt = $(':input').length;
                     var combo = $("<select id='"+groupname+":" + inputCnt + "' onchange='updateResolver(this)'></select>");
                     combo.append("<option></option>");
-                    combo.append("<option>Edit this group...</option>");
+                    combo.append("<option value='edit'>Edit this group...</option>");
                     var options = dict[groupNameTop];
                     $.each(options, function (i, el) {
                         combo.append("<option>" + el + "</option>");
@@ -183,7 +221,8 @@ html
                 var idVal = regTst.exec($(m).prop('id'));
                 var groupNameVal = idVal[1];
                 if (selectedVal == 'edit'){
-                    //add group to editor, add groups to options
+                    $("#dropdownUl").empty();
+                    $("#groupName").val(groupNameVal.toUpperCase()).trigger('change');
                 } else if (selectedVal) {
                     //update the resolver
                     var myInputVal = document.getElementById('myInput').textContent;
@@ -212,7 +251,7 @@ html
             addOptionsToDropdownDiv = function (options) {
                 var combo = $("#dropdownUl");
                 combo.empty();
-                combo.append("<li>Create New Option...</li>");
+                combo.append("<li>"+createMsg+"</li>");
                 $.each(options, function (i, el) {
                     combo.append("<li>" + el + "</li>");
                 });
@@ -221,6 +260,9 @@ html
 
     body
         block content
+            script(type='text/javascript').
+
+
             input#dict(value= dictionary, hidden)
 
             div#myInput(type=text, contenteditable="true", class="user-input-field")

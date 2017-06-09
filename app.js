@@ -12,8 +12,8 @@ var build = require('./routes/build');
 
 var MG = require('missionGenerator');
 var mg = new MG();
-// mg.loadDictionary('../../public/files/majestic12.json');
-mg.loadDictionary('../../public/files/spycraft.json');
+mg.loadDictionary('../../public/files/majestic12.json');
+// mg.loadDictionary('../../public/files/spycraft.json');
 
 
 var app = express();
@@ -70,6 +70,7 @@ io.sockets.on("connection",function(socket){
     console.log('Socket.io Connection with the client established');
     socket.on("message",function(data){
       /*This event is triggered at the server side when client sends the data using socket.send() method */
+        console.log("...in message");
         data = mg.run(data,0,mg.run)
         console.log(data);
       /*Printing the data */
@@ -78,6 +79,24 @@ io.sockets.on("connection",function(socket){
         }
         socket.send(JSON.stringify(ack_to_client));
       /*Sending the Acknowledgement back to the client , this will trigger "message" event on the clients side*/
+    });
+    socket.on("addToGroup",function(data){
+        /*This event is triggered at the server side when client sends the data using socket.send() method */
+        var jsonData = JSON.parse(data);
+        console.log("...in addToGroup");
+        var group = jsonData.groupName;
+        var entryList = jsonData.entryList;
+        console.log("group: " + group);
+        console.log("entryList: " + entryList);
+        mg.addToGroup(group,entryList,true);
+
+        /*Printing the data */
+        var ack_to_client = {
+            dict: mg.masterDictionary,
+            data: 'ack'
+        }
+        socket.send(JSON.stringify(ack_to_client));
+        /*Sending the Acknowledgement back to the client , this will trigger "message" event on the clients side*/
     });
 
 });
