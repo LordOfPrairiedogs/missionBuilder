@@ -86,6 +86,7 @@ html
                         $('#dict').val(JSON.stringify(dict));
                         groups = Object.keys(dict);
                         $('#groupName').autocomplete();
+                        findBrackets();
                     }
                     /*appending the data on the page using Jquery */
                 });
@@ -157,13 +158,16 @@ html
                         "Add": function () {
                             var combo = $("#dropdownUl");
                             var optionval = $("#newOption").text();
+                            var entryList = [];
                             $('#dropdownUl li').each(function (i) {
                                 var entry = $(this).text();
-                                if (entry != optionval) {
-                                    combo.append("<li>" + optionval + "</li>");
+                                if (entry != createMsg) {
+                                    entryList.push(entry);
                                 }
-                            })
-
+                            });
+                            if (entryList.indexOf(optionval)<0){
+                                combo.append("<li>" + optionval + "</li>");
+                            }
 
                             $("#newOption").text("")
                             $(this).dialog("close");
@@ -221,8 +225,9 @@ html
                 var idVal = regTst.exec($(m).prop('id'));
                 var groupNameVal = idVal[1];
                 if (selectedVal == 'edit'){
+                    var textContext = groupNameVal.toUpperCase();
                     $("#dropdownUl").empty();
-                    $("#groupName").val(groupNameVal.toUpperCase()).trigger('change');
+                    $("#groupName").val(textContext).trigger('change');
                 } else if (selectedVal) {
                     //update the resolver
                     var myInputVal = document.getElementById('myInput').textContent;
@@ -245,6 +250,7 @@ html
                 } else {
                     $("#groupName").val(textContext);
                     $("#dropdownUl").empty();
+                    addOptionsToDropdownDiv();
                 }
 
             }
