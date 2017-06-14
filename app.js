@@ -51,7 +51,7 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-var listener = http.listen(80, function () {
+var listener = http.listen( function () {
     console.log('Example app listening ' + listener.address().port);
 });
 io = io.listen(listener);
