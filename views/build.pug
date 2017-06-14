@@ -11,16 +11,20 @@ html
             .ui-widget input {
                 width: 300px;
             }
+
             .user-input-field {
                 width: 300px;
                 border-style: solid;
             }
+
             .option-btn {
                 background-color: gold;
             }
+
             .group-btn {
                 background-color: greenyellow;
             }
+
             .ui-autocomplete {
                 max-height: 100px;
                 overflow-y: auto;
@@ -69,7 +73,7 @@ html
 
                 dict = JSON.parse($('#dict').val());
                 groups = Object.keys(dict);
-                var socket = io.connect();
+                var socket = io({transports: ['websocket']});
                 /*Initializing the connection with the server via websockets */
                 socket.on("message", function (message) {
                     /*
@@ -81,7 +85,7 @@ html
                     message = JSON.parse(message);
                     //console.log(message);
                     /*converting the data into JS object */
-                    if (message.dict){
+                    if (message.dict) {
                         dict = message.dict;
                         $('#dict').val(JSON.stringify(dict));
                         groups = Object.keys(dict);
@@ -94,11 +98,11 @@ html
 
                 $(function () {
                     $('#groupName').autocomplete({source: groups});
-                    $('#groupName').change( function (event) {
+                    $('#groupName').change(function (event) {
                         var theGroup = $(this).val();
                         var options = dict[theGroup];
 
-                        if (options && options.length>0){
+                        if (options && options.length > 0) {
                             //create options
                             addOptionsToDropdownDiv(options);
                         }
@@ -107,7 +111,7 @@ html
                         stop: function () {
                             $(".ui-selected", this).each(function () {
                                 var text = $(this).text();
-                                if (text === createMsg){
+                                if (text === createMsg) {
                                     //open dialog
                                     $("#dialog").dialog("open");
                                 }
@@ -116,14 +120,14 @@ html
                     });
 
                     $("#newGroupBtn").button(
-                    {
-                        icon: "ui-icon-document"
-                    }).click(function (event) {
+                        {
+                            icon: "ui-icon-document"
+                        }).click(function (event) {
                         event.preventDefault();
                         var entryList = [];
-                        $('#dropdownUl li').each(function(i){
+                        $('#dropdownUl li').each(function (i) {
                             var entry = $(this).text();
-                            if (entry != createMsg){
+                            if (entry != createMsg) {
                                 entryList.push(entry);
                             }
                         })
@@ -165,7 +169,7 @@ html
                                     entryList.push(entry);
                                 }
                             });
-                            if (entryList.indexOf(optionval)<0){
+                            if (entryList.indexOf(optionval) < 0) {
                                 combo.append("<li>" + optionval + "</li>");
                             }
 
@@ -189,15 +193,15 @@ html
                 result.html(temp.replace(regexBracket, optionize));
             }
             buttonize = function (m) {
-                if (m.match("{")){
+                if (m.match("{")) {
                     btnType = "option";
-                } else if (m.match("\\[")){
+                } else if (m.match("\\[")) {
                     btnType = "group";
                 }
-                var groupName = m.replace('{', '').replace('}', '').replace('[','').replace(']','');
+                var groupName = m.replace('{', '').replace('}', '').replace('[', '').replace(']', '');
                 var buttonCnt = $('.ui-button').length;
-                var btnClass = btnType+"-btn";
-                var button = '<button class="ui-button ui-widget ui-corner-all '+ btnClass +
+                var btnClass = btnType + "-btn";
+                var button = '<button class="ui-button ui-widget ui-corner-all ' + btnClass +
                     '" id="' + groupName + ":" + (buttonCnt + 1) +
                     '" onclick="openGroupDlg(this)">' + groupName + '</button>';
                 return button;
@@ -207,7 +211,7 @@ html
                 var groupNameTop = groupname.toUpperCase();
                 if (groups.indexOf(groupNameTop) > -1) {
                     var inputCnt = $(':input').length;
-                    var combo = $("<select id='"+groupname+":" + inputCnt + "' onchange='updateResolver(this)'></select>");
+                    var combo = $("<select id='" + groupname + ":" + inputCnt + "' onchange='updateResolver(this)'></select>");
                     combo.append("<option></option>");
                     combo.append("<option value='edit'>Edit this group...</option>");
                     var options = dict[groupNameTop];
@@ -224,7 +228,7 @@ html
                 var regTst = /^(\w+)/;
                 var idVal = regTst.exec($(m).prop('id'));
                 var groupNameVal = idVal[1];
-                if (selectedVal == 'edit'){
+                if (selectedVal == 'edit') {
                     var textContext = groupNameVal.toUpperCase();
                     $("#dropdownUl").empty();
                     $("#groupName").val(textContext).trigger('change');
@@ -244,7 +248,7 @@ html
                 //disable add button if exist, etc
                 var isOption = $(m).hasClass('option-btn');
                 var textContext = m.textContent;
-                if (isOption){
+                if (isOption) {
                     $("#groupName").val("");
                     addOptionsToDropdownDiv([textContext]);
                 } else {
@@ -257,7 +261,7 @@ html
             addOptionsToDropdownDiv = function (options) {
                 var combo = $("#dropdownUl");
                 combo.empty();
-                combo.append("<li>"+createMsg+"</li>");
+                combo.append("<li>" + createMsg + "</li>");
                 $.each(options, function (i, el) {
                     combo.append("<li>" + el + "</li>");
                 });
