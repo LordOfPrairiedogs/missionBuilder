@@ -5,7 +5,7 @@ block content
     script(src='/javascript/socket.io-client/dist/socket.io.js')
     script(src='https://code.jquery.com/jquery-1.10.2.min.js')
     script(type='text/javascript').
-        var socket = io({transports: ['websocket']});
+        var socket = io('ws://salty-tundra-28222.herokuapp.com/socket.io',{transports: ['websocket']});
         /*Initializing the connection with the server via websockets */
         socket.on("message", function (message) {
             /*
