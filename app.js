@@ -10,7 +10,6 @@ var io = require('socket.io')(http);
 var index = require('./routes/index');
 var users = require('./routes/users');
 var build = require('./routes/build');
-var port = process.env.PORT || 80;
 
 var MG = require('missionGenerator');
 var mg = new MG();
@@ -52,7 +51,7 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-var listener = http.listen(port, function () {
+var listener = http.listen(function () {
     console.log('Example app listening ' + listener.address().port);
 });
 io = io.listen(listener);
